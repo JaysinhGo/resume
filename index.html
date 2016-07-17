@@ -2,25 +2,41 @@
 <html lang="en">
     <head>
         <meta charset=utf-8>
-        <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1" />		
+        <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1" />
         <title>J@WebR</title>
         <link href='http://fonts.googleapis.com/css?family=Roboto' rel='stylesheet' type='text/css'>
         <link rel="stylesheet" href="css/webR.css">
         <script src="js/jquery-1.12.1.min.js"></script>
         <script src="js/jquery.transit.min.js"></script>
         <script>
-			var w = $(window).width();
-			var h = $(window).height();
+        function isCanvasSupported(){
+          var elem = document.createElement('canvas');
+          return !!(elem.getContext && elem.getContext('2d'));
+        }
+        var w = $(window).width();var h = $(window).height();var canvas = isCanvasSupported();
         </script>
-        <script src="js/webR.js"></script>    
+        <script src="js/webR.js"></script>
     </head>
     <body>
+        <img class="load" src="img/about-me.png" >
+        <img class="load" src="img/arrow.png" >
+        <img class="load" src="img/born.png" >
+        <img class="load" src="img/chat.png" >
+        <img class="load" src="img/circl.png" >
+        <img class="load" src="img/circll.png" >
+        <img class="load" src="img/dob.png" >
+        <img class="load" src="img/ert.png" >
+        <img class="load" src="img/likes.png" >
+        <img class="load" src="img/map.png" >
+        <img class="load" src="img/nameLabel.png" >
+        <img class="load" src="img/scrollDown.png" >
+        <img class="load" src="img/transBg.png" >
         <div class="webRBody">
-        	<div class="webRBodyScreen">            
+        	<div class="webRBodyScreen large-header" id="large-header">
     			<span id="sc" style="color:#FFFFFF;position: absolute;top:0;left:0;" ></span>
                 <table style="width: 100%;">
                     <tr>
-                        <td style="text-align: center; vertical-align: middle;">                        
+                        <td style="text-align: center; vertical-align: middle;">
             				<div class="downArrowBox dispInline">
                             	<div class="scrollDownTxt">Scroll Down</div>
                                 <img class="arrow" src="img/arrow.png" />
@@ -29,7 +45,7 @@
                             	<div class="nameBg nameLabelBg">
                                 	<div class="nameBg">
                                         <div class="nameBg">
-                                            <div class="nameBg">                                            
+                                            <div class="nameBg">
                                                 <div class="nameBg">
                                                 </div>
                                             </div>
@@ -38,7 +54,7 @@
                                 </div>
                             </div>
                             <div class="abtMeLabel">
-                            	<div class="abtMeImg"></div>                                
+                            	<div class="abtMeImg"></div>
                             </div>
                             <div class="abtMeDataBox">
                             	<div class="abtMeDataNavv"></div>
@@ -71,7 +87,7 @@
                                         <div class="abtMeDataTitle">Hobbies</div>
                                         <div class="abtMeDataTitle">
                                             <div class="abtMeDataBDline"></div>
-                                            <div class="hobbiesIcons">                                            	
+                                            <div class="hobbiesIcons">
                                                 <span class="hobbiesIcon music"></span>
                                                 <span class="hobbiesIcon cric"></span>
                                                 <span class="hobbiesIcon volley"></span>
@@ -88,7 +104,7 @@
                         </td>
                     </tr>
                 </table>
-            </div>            
+            </div>
 			<script>
 				$(".webRBodyScreen, .webRBodyScreen table").height(h);
 				var myNameBox = $('.myname').width() / 2;
@@ -96,7 +112,104 @@
 				l = l + myNameBox ;
 				l = l * (-1) ;
 				$(".nameBg").css('left', l);
-            </script>
-        </div>
+        if(canvas){
+          $("#large-header").append('<canvas id="demo-canvas"></canvas>');
+          (function() {
+            var width, height, largeHeader, canvas, ctx, circles, target, animateHeader = true;
+
+            // Main
+            initHeader();
+            addListeners();
+
+            function initHeader() {
+                width = window.innerWidth;
+                height = window.innerHeight;
+                target = {x: 0, y: height};
+
+                largeHeader = document.getElementById('large-header');
+                largeHeader.style.height = height+'px';
+
+                canvas = document.getElementById('demo-canvas');
+                canvas.width = width;
+                canvas.height = height;
+                canvas.style = "position: fixed; top: 0;opacity: 0.3;"
+                ctx = canvas.getContext('2d');
+
+                // create particles
+                circles = [];
+                for(var x = 0; x < width*0.5; x++) {
+                    var c = new Circle();
+                    circles.push(c);
+                }
+                animate();
+            }
+
+            // Event handling
+            function addListeners() {
+//                window.addEventListener('scroll', scrollCheck);
+                window.addEventListener('resize', resize);
+            }
+
+            function scrollCheck() {
+                if(document.body.scrollTop > height) animateHeader = false;
+                else animateHeader = true;
+            }
+
+            function resize() {
+                width = window.innerWidth;
+                height = window.innerHeight;
+                largeHeader.style.height = height+'px';
+                canvas.width = width;
+                canvas.height = height;
+            }
+
+            function animate() {
+                if(animateHeader) {
+                    ctx.clearRect(0,0,width,height);
+                    for(var i in circles) {
+                        circles[i].draw();
+                    }
+                }
+                requestAnimationFrame(animate);
+            }
+
+            // Canvas manipulation
+            function Circle() {
+                var _this = this;
+
+                // constructor
+                (function() {
+                    _this.pos = {};
+                    init();
+                    console.log(_this);
+                })();
+
+                function init() {
+                    _this.pos.x = Math.random()*width;
+                    _this.pos.y = height+Math.random()*100;
+                    _this.alpha = 0.1+Math.random()*0.3;
+                    _this.scale = 0.1+Math.random()*0.3;
+                    _this.velocity = Math.random();
+                }
+
+                this.draw = function() {
+                    if(_this.alpha <= 0) {
+                        init();
+                    }
+                    _this.pos.y -= _this.velocity;
+                    _this.alpha -= 0.0005;
+                    ctx.beginPath();
+                    ctx.arc(_this.pos.x, _this.pos.y, _this.scale*10, 0, 2 * Math.PI, false);
+                    ctx.fillStyle = 'rgba(255,255,255,'+ _this.alpha+')';
+                    ctx.fill();
+                };
+            }
+
+        })();
+      }else{
+        $("body").css("background-image","img/bg-strips-light.png");
+      }
+        $(".load").load(function() {$(".load").remove();});
+      </script>
     </body>
 <html>
