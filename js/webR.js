@@ -1,6 +1,24 @@
-$(window).scroll(function() {
+
+(function() {
+var lastScrollTop = 0;
+ $(window).scroll(function() {
+ 	var w = $(window).width();
+ 	var h = $(window).height();
+ 	var fire = 0; 	
 	var scrollObj = $(window).scrollTop();
-	var myNameScrollDivide = (l/600) * (-1);
+	setInterval(function(){
+			fire++;
+			$(".fire").hide();
+			$(".jet"+fire).show();
+			if(fire===3) fire=0;
+	}, 550);
+    if (scrollObj > lastScrollTop){
+       $(".jetPlane").removeClass("jetRotate");
+    } else {
+       $(".jetPlane").addClass("jetRotate");
+    }
+    lastScrollTop = scrollObj;
+    var myNameScrollDivide = (l/600) * (-1);
 	var maNameLeftScroll;
 	$("#sc").text(scrollObj);
 	if( scrollObj < 200 ) {
@@ -190,4 +208,27 @@ $(window).scroll(function() {
 		$(".abtMeDataNavv").height(330);
 		$(".abtMeDataNav").height(100);
 	}
+	if(scrollObj > 5745){		
+		$(".abtMeDataBox").removeClass("dispInline");
+		$(".skills").addClass("dispInline");
+		$(".skills").css("opacity", ((scrollObj -5745)*0.01));
+		$(".skills").show();
+		if(scrollObj > 5750){$(".planet-skills").css("left", (w/3) - ((scrollObj - 5750)*(-l/300)));}
+		if(scrollObj > 6050){
+			$(".planet-html").show();
+			$(".planet-html").css("left", (w/4.5) - ((scrollObj - 6050)*(-l/400)));
+			if(scrollObj > 6450){
+				$(".planet-css").show();
+				$(".planet-css").css("left", (w/3.3) - ((scrollObj - 6450)*(-l/200)));
+			}else{
+				$(".planet-css").hide();
+			}
+		}
+		else{$(".planet-html").hide();}
+	}else{
+		$(".skills").removeClass("dispInline");
+		$(".skills").css("opacity", 0);
+		$(".skills").hide();
+	}
 });
+})();
